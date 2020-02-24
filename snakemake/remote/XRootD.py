@@ -201,7 +201,7 @@ class XRootDHelper(object):
             )
 
     def list_directory(self, domain, dirname):
-        status, dirlist = self.get_client(domain).dirlist(dirname, DirListFlags.STAT)
+        status, result = self.get_client(domain).dirlist(dirname, DirListFlags.STAT)
         if not status.ok:
             raise XRootDFileException(
                 "Error listing directory "
@@ -211,9 +211,12 @@ class XRootDHelper(object):
                 + "\n"
                 + repr(status)
                 + "\n"
-                + repr(dirlist)
+                + repr(result)
             )
-        return dirlist.dirlist
+        dirlist = result.dirlist
+        # It's possible for XRootD to return duplicates so filter them out
+        dirlist = sorted({f.name: f}.values(), key=lambda f: f.name)
+        return dirlist
 
     def list_directory_recursive(self, start_url):
         assert start_url.endswith("/")
