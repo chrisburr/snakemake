@@ -216,7 +216,7 @@ class XRootDHelper(object):
             )
         dirlist = result.dirlist
         # It's possible for XRootD to return duplicates so filter them out
-        dirlist = sorted({f.name: f}.values(), key=lambda f: f.name)
+        dirlist = sorted({f.name: f for f in result}.values(), key=lambda f: f.name)
         if len(dirlist) != len(result.dirlist):
             logger.warning("Found duplicates in response from {}".format(domain))
         return dirlist
