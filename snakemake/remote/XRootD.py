@@ -9,6 +9,7 @@ import re
 
 from snakemake.remote import AbstractRemoteObject, AbstractRemoteProvider
 from snakemake.exceptions import WorkflowError, XRootDFileException
+from snakemake import logging
 
 try:
     from XRootD import client
@@ -216,6 +217,8 @@ class XRootDHelper(object):
         dirlist = result.dirlist
         # It's possible for XRootD to return duplicates so filter them out
         dirlist = sorted({f.name: f}.values(), key=lambda f: f.name)
+        if len(dirlist) != len(result.dirlist):
+            logger.warning("Found duplicates in response from {}".format(domain))
         return dirlist
 
     def list_directory_recursive(self, start_url):
