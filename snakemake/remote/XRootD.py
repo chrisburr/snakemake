@@ -7,6 +7,8 @@ import os
 from os.path import abspath, join, normpath
 import re
 
+import cachetools.func
+
 from snakemake.remote import AbstractRemoteObject, AbstractRemoteProvider
 from snakemake.exceptions import WorkflowError, XRootDFileException
 from snakemake.logging import logger
@@ -201,6 +203,7 @@ class XRootDHelper(object):
                 "Failed to create directory " + dirname, repr(status)
             )
 
+    @cachetools.func.ttl_cache(ttl=10)
     def list_directory(self, domain, dirname):
         status, result = self.get_client(domain).dirlist(dirname, DirListFlags.STAT)
         if not status.ok:
