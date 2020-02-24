@@ -9,7 +9,7 @@ import re
 
 from snakemake.remote import AbstractRemoteObject, AbstractRemoteProvider
 from snakemake.exceptions import WorkflowError, XRootDFileException
-from snakemake import logging
+from snakemake.logging import logger
 
 try:
     from XRootD import client
